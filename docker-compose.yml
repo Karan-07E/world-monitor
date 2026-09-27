@@ -1,0 +1,212 @@
+version: '3.8'
+
+services:
+  # ====== Application ======
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - HSM_TYPE=memory
+      - LOG_LEVEL=info
+      - FABRIC_ENABLED=false
+      - DISABLE_MINIO=false
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - sdd-network
+    restart: unless-stopped
+
+  # ====== MinIO Object Storage ======
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sdd-network
+
+  # ====== MinIO Bucket Setup ======
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 minioadmin minioadmin;
+      mc mb --ignore-existing local/encrypted-documents;
+      mc mb --ignore-existing local/watermarked-documents;
+      mc mb --ignore-existing local/forensic-inputs;
+      mc mb --ignore-existing local/audit-artifacts;
+      echo 'Buckets created successfully';
+      "
+    networks:
+      - sdd-network
+
+  # ====== Hyperledger Fabric CA ======
+  ca.audit.example.com:
+    image: hyperledger/fabric-ca:1.5
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-audit
+      - FABRIC_CA_SERVER_TLS_ENABLED=false
+      - FABRIC_CA_SERVER_PORT=7054
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - fabric-ca-data:/etc/hyperledger/fabric-ca-server
+    networks:
+      - sdd-network
+
+  # ====== Fabric Orderer 1 (Raft) ======
+  orderer1.example.com:
+    image: hyperledger/fabric-orderer:2.5
+    environment:
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=false
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:7053
+      - ORDERER_ADMIN_TLS_ENABLED=false
+    ports:
+      - "7050:7050"
+      - "7053:7053"
+    volumes:
+      - orderer1-data:/var/hyperledger/production/orderer
+    networks:
+      - sdd-network
+
+  orderer2.example.com:
+    image: hyperledger/fabric-orderer:2.5
+    environment:
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=8050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=false
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:8053
+      - ORDERER_ADMIN_TLS_ENABLED=false
+    ports:
+      - "8050:8050"
+      - "8053:8053"
+    volumes:
+      - orderer2-data:/var/hyperledger/production/orderer
+    networks:
+      - sdd-network
+
+  orderer3.example.com:
+    image: hyperledger/fabric-orderer:2.5
+    environment:
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=9050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=false
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9053
+      - ORDERER_ADMIN_TLS_ENABLED=false
+    ports:
+      - "9050:9050"
+      - "9053:9053"
+    volumes:
+      - orderer3-data:/var/hyperledger/production/orderer
+    networks:
+      - sdd-network
+
+  # ====== Fabric Peers ======
+  peer0.audit.example.com:
+    image: hyperledger/fabric-peer:2.5
+    environment:
+      - CORE_PEER_ID=peer0.audit.example.com
+      - CORE_PEER_ADDRESS=peer0.audit.example.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_LOCALMSPID=AuditOrgMSP
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.audit.example.com:8051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.audit.example.com:7051
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    ports:
+      - "7051:7051"
+    volumes:
+      - peer0-data:/var/hyperledger/production
+      - /var/run/docker.sock:/host/var/run/docker.sock
+    networks:
+      - sdd-network
+
+  peer1.audit.example.com:
+    image: hyperledger/fabric-peer:2.5
+    environment:
+      - CORE_PEER_ID=peer1.audit.example.com
+      - CORE_PEER_ADDRESS=peer1.audit.example.com:8051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_LOCALMSPID=AuditOrgMSP
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.audit.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.audit.example.com:8051
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    ports:
+      - "8051:8051"
+    volumes:
+      - peer1-data:/var/hyperledger/production
+      - /var/run/docker.sock:/host/var/run/docker.sock
+    networks:
+      - sdd-network
+
+  peer2.audit.example.com:
+    image: hyperledger/fabric-peer:2.5
+    environment:
+      - CORE_PEER_ID=peer2.audit.example.com
+      - CORE_PEER_ADDRESS=peer2.audit.example.com:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_LOCALMSPID=AuditOrgMSP
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.audit.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer2.audit.example.com:9051
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    ports:
+      - "9051:9051"
+    volumes:
+      - peer2-data:/var/hyperledger/production
+      - /var/run/docker.sock:/host/var/run/docker.sock
+    networks:
+      - sdd-network
+
+volumes:
+  minio-data:
+  fabric-ca-data:
+  orderer1-data:
+  orderer2-data:
+  orderer3-data:
+  peer0-data:
+  peer1-data:
+  peer2-data:
+
+networks:
+  sdd-network:
+    driver: bridge
