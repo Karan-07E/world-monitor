@@ -1,0 +1,102 @@
+=== TASK 3 - TRIAGE ROUTES FLAGGED NO_CONTROL_FOUND ===
+Found 152 routes with NO_CONTROL_FOUND.
+ROUTE | METHOD | STATUS | CONTENT-TYPE | SIZE | CLASSIFICATION | REASON
+----------------------------------------------------------------------------------------------------
+/api/oauth-protected-resource | GET | 200 | text/javascript | 9700 | PUBLIC_DATA | Public data endpoint
+/api/[...notfound] | GET | 200 | text/html | 44910 | PUBLIC_DATA | Dev server SPA fallback or public page
+/api/docs-mcp | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/user-prefs | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/latest-brief | GET | 200 | text/javascript | 30159 | PUBLIC_DATA | Public data endpoint
+/api/seed-contract-probe | GET | 200 | text/javascript | 38600 | PUBLIC_DATA | Public data endpoint
+/api/chat-analyst | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/agent-auth | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/mcp-proxy | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/customer-portal | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/notify | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/oauth-authorization-server | GET | 200 | text/javascript | 9380 | PUBLIC_DATA | Public data endpoint
+/api/invalidate-user-api-key-cache | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/md-twin | GET | 200 | text/javascript | 2620 | PUBLIC_DATA | Public data endpoint
+/api/ask | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/widget-agent | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/http-message-signatures-directory | GET | 200 | text/javascript | 8355 | PUBLIC_DATA | Public data endpoint
+/api/notification-channels | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/create-checkout | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/symbol-search | GET | 200 | text/javascript | 35722 | PUBLIC_DATA | Public data endpoint
+/api/a2a | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/referral/me | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/oauth/authorize-pro | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/oauth/token | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/embed/session | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/embed/entitlement | GET | 200 | text/javascript | 7737 | PUBLIC_DATA | Public data endpoint
+/api/embed/map-frame | GET | 200 | text/javascript | 20131 | PUBLIC_DATA | Public data endpoint
+/api/internal/mcp-grant-mint | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/internal/mcp-grant-context | GET | 200 | text/javascript | 20218 | PUBLIC_DATA | Public data endpoint
+/api/internal/brief-why-matters | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/user/passkey-offer | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/user/mcp-quota | GET | 200 | text/javascript | 21348 | PUBLIC_DATA | Public data endpoint
+/api/user/mcp-revoke | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/mcp/downstream | GET | 200 | text/javascript | 41428 | PUBLIC_DATA | Public data endpoint
+/api/mcp/free-account-allowance | GET | 200 | text/javascript | 15111 | PUBLIC_DATA | Public data endpoint
+/api/mcp/quota | GET | 200 | text/javascript | 23939 | PUBLIC_DATA | Public data endpoint
+/api/mcp/dispatch | GET | 200 | text/javascript | 68081 | PUBLIC_DATA | Public data endpoint
+/api/mcp/bounded-body | GET | 200 | text/javascript | 12182 | PUBLIC_DATA | Public data endpoint
+/api/mcp/handler | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/mcp/auth | GET | 200 | text/javascript | 106184 | PUBLIC_DATA | Public data endpoint
+/api/mcp/billing-denial | GET | 200 | text/javascript | 21416 | PUBLIC_DATA | Public data endpoint
+/api/me/entitlement | GET | 200 | text/javascript | 7105 | PUBLIC_DATA | Public data endpoint
+/api/brief/share-url | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/skills/fetch-agentskills | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/positive-events/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/seismology/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/scorecard/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/webcam/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/infrastructure/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/supply-chain/v1/country-products | GET | 400 | application/json | 67 | REQUIRES_PARAMS | Bad Request
+/api/supply-chain/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/supply-chain/v1/multi-sector-cost-shock | GET | 400 | application/json | 126 | REQUIRES_PARAMS | Bad Request
+/api/climate/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/market/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/slack/oauth/start | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/slack/oauth/callback | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/brief/public/[hash] | GET | 200 | text/html | 44910 | PUBLIC_DATA | Dev server SPA fallback or public page
+/api/brief/[userId]/[issueDate] | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/brief/carousel/[userId]/[issueDate]/[page] | GET | 200 | text/html | 44910 | PUBLIC_DATA | Dev server SPA fallback or public page
+/api/sanctions/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/batch/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/resilience/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/news/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/scenario/v1/status | GET | 400 | application/json | 68 | REQUIRES_PARAMS | Bad Request
+/api/scenario/v1/templates | GET | 200 | application/json | 1267 | PUBLIC_DATA | Public data endpoint
+/api/scenario/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/scenario/v1/run | GET | 405 | application/json | 30 | REQUIRES_PARAMS | Method Not Allowed
+/api/aviation/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/v2/shipping/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/v2/shipping/webhooks/[subscriberId] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/v2/shipping/webhooks/[subscriberId]/[action] | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/safety/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/wildfire/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/military/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/mcp/resources/index | GET | 200 | text/javascript | 68643 | PUBLIC_DATA | Public data endpoint
+/api/conflict/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/displacement/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/thermal/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/economic/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/prediction/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/unrest/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/radiation/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/health/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/leads/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/trade/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/intelligence/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/consumer-prices/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/giving/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/imagery/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/natural/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/discord/oauth/start | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/discord/oauth/callback | POST | ERROR | N/A | 0 | REQUIRES_PARAMS | Method not allowed by R4
+/api/cyber/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/maritime/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/research/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+/api/forecast/v1/[rpc] | GET | 404 | application/json | 21 | REQUIRES_PARAMS | Not Found
+----------------------------------------------------------------------------------------------------
+Candidates found for further review: 0
